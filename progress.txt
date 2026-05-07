@@ -1,0 +1,9 @@
+# EDA — Rossmann Store Sales
+## Key Findings
+- Dataset: 1,017,209 rows, 1,115 stores, Jan 2013 - Jul 2015
+- Usable rows after filtering closed stores: ~844,338
+- Promo uplift: +38.8% average sales increase
+- Day of week strongly affects sales (Sunday highest, Saturday lowest)
+- Store Type B generates ~47% more revenue than other types
+- Missing values in CompetitionDistance (3), CompetitionOpenSince (354), Promo2 fields (544)
+as of 07-05-2026 23:55
