@@ -1,0 +1,206 @@
+# FMCG Promotion Impact Forecasting System
+
+An end-to-end AI-powered retail intelligence platform that forecasts product sales, predicts promotion uplift, and simulates promotion ROI for FMCG stores — built on the Rossmann Store Sales dataset.
+
+---
+
+## Project Summary
+
+Retailers spend millions on promotions without knowing the exact impact in advance. This system uses machine learning to forecast sales, measure promotion uplift, and recommend whether a promotion is worth running — before any budget is committed.
+
+---
+
+## Results
+
+| Metric | Score |
+|--------|-------|
+| Model | XGBoost |
+| Training Records | 813,118 |
+| Features Engineered | 39 |
+| Model MAPE | 9.85% |
+| Baseline MAPE | 18.55% |
+| Improvement | 47% better than baseline |
+| Avg Promotion Uplift | 38.8% |
+
+---
+
+## System Architecture
+
+```
+[ DATA LAYER ]
+Raw Rossmann CSVs → Preprocessing Pipeline → Feature Engineering
+
+[ ML LAYER ]
+Baseline Model → XGBoost Forecaster → Uplift Model → SHAP Explainer
+
+[ API LAYER ]
+FastAPI → /predict-sales → /predict-uplift → /simulate-promotion
+
+[ DASHBOARD LAYER ]
+Streamlit → Overview → Simulator → SHAP Page → Store Analytics
+```
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Language | Python 3.14 |
+| ML Model | XGBoost |
+| Explainability | SHAP |
+| Backend API | FastAPI |
+| Dashboard | Streamlit |
+| Visualization | Plotly |
+| Data Processing | Pandas, NumPy |
+| Deployment | Docker |
+
+---
+
+## Project Structure
+
+```
+fmcg-promo-forecast/
+│
+├── data/
+│   ├── raw/              # Original Kaggle CSVs (not tracked in git)
+│   └── processed/        # Cleaned and feature engineered data
+│
+├── notebooks/
+│   └── 01_eda.ipynb      # Exploratory data analysis
+│
+├── pipelines/
+│   ├── preprocess.py     # Data cleaning pipeline
+│   ├── features.py       # Feature engineering pipeline
+│   ├── baseline_model.py # Naive baseline for benchmarking
+│   ├── train_model.py    # XGBoost training pipeline
+│   └── explain_model.py  # SHAP explainability
+│
+├── models/
+│   ├── xgboost_model.pkl # Trained model artifact
+│   └── feature_cols.pkl  # Feature list used in training
+│
+├── api/
+│   └── main.py           # FastAPI application
+│
+├── dashboard/
+│   └── app.py            # Streamlit dashboard
+│
+├── reports/
+│   ├── shap_summary.png          # SHAP feature importance plot
+│   ├── dashboard_overview.png    # Overview page screenshot
+│   ├── dashboard_simulator.png   # Promotion simulator screenshot
+│   ├── dashboard_shap.png        # Explainability page screenshot
+│   └── api_swagger.png           # API documentation screenshot
+│
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+---
+
+## Features Engineered
+
+| Category | Features |
+|----------|----------|
+| Calendar | Year, Month, Day, WeekOfYear, DayOfYear, Quarter |
+| Business Calendar | IsWeekend, IsMonthStart, IsMonthEnd |
+| Lag Features | Sales_Lag_7, Sales_Lag_14, Sales_Lag_28 |
+| Rolling Mean | Sales_Rolling_Mean_7, 14, 28 |
+| Rolling Std | Sales_Rolling_Std_7, 14, 28 |
+| Promotion | Promo, PromoRunLength, PromoYesterday, Promo2 |
+| Store | StoreType, Assortment, CompetitionDistance |
+| Competition | CompetitionOpenMonths |
+
+---
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/predict-sales` | POST | Forecast daily sales for a store |
+| `/predict-uplift` | POST | Measure promotion impact on sales |
+| `/simulate-promotion` | POST | Calculate ROI and run/no-run recommendation |
+
+---
+
+## Key Findings from EDA
+
+- Dataset contains 1,017,209 records across 1,115 stores from Jan 2013 to Jul 2015
+- 172,817 rows removed where stores were closed
+- Promotions drive an average 38.8% increase in daily sales
+- Store Type B generates 47% more revenue than other store types
+- Monday and Sunday are the strongest sales days
+- The top predictive features are recent rolling sales averages, not raw lag values — meaning trend matters more than exact history
+
+---
+
+## Screenshots
+
+### Overview Dashboard
+![Overview](reports/dashboard_overview.png)
+
+### Promotion Simulator
+![Simulator](reports/dashboard_simulator.png)
+
+### Model Explainability
+![SHAP](reports/dashboard_shap.png)
+
+### Store Analytics
+![Store Analytics](reports/dashboard_store_analytics.png)
+
+### API Documentation
+![API](reports/api_swagger.png)
+
+---
+
+## How to Run
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/1337dCoder/FMCG-Promo-forecast-model.git
+cd FMCG-Promo-forecast-model
+```
+
+### 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Download the dataset
+Download from Kaggle: https://www.kaggle.com/competitions/rossmann-store-sales/data
+
+Place train.csv, store.csv, test.csv into data/raw/
+
+### 4. Run the pipelines
+```bash
+python pipelines/preprocess.py
+python pipelines/features.py
+python pipelines/train_model.py
+python pipelines/explain_model.py
+```
+
+### 5. Start the API
+```bash
+python -m uvicorn api.main:app --reload
+```
+
+### 6. Launch the dashboard
+```bash
+python -m streamlit run dashboard/app.py
+```
+
+---
+
+## Dataset
+
+Rossmann Store Sales — Kaggle Competition
+https://www.kaggle.com/competitions/rossmann-store-sales/data
+
+1,115 Rossmann drug stores across Germany
+Daily sales records from January 2013 to July 2015
+
+---
+
+## Author-1337dCoder
